@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Oppgave 3. Matlageret (25%)</title>
+</head>
+<body>
+
+	<h3>Matlageret</h3>
+	<label>Produktnavn</label>
+	<input type="text" id="product-name"><br>
+	<label>Antall på lager</label>
+	<input type="text" id="amount-in-storage"><br>
+	<input type="button" value="Legg til produkt i array" id="add-to-array">
+	<input type="button" value="Vis produkter du har lagt til" id="show-added">
+    <div id="output-div"></div>
+	
+	<script>	
+		
+		/* Besvarelse legges til før og/eller etter funksjonen */
+		
+        /*Funksjonen tar i mot to verdier, a og b. den første if-statementen sier at hvis mengden av b er større enn mengden av a, skal koden returnere a. hvis a er mindre enn b skal koden returnere -1. hvis de er like skal de bli der de er. Vi kan dermed se at koden prøver å finne ut hvor b er i forhold til a, der mengden av a settes som 0. Dermed vil b ligge til venstre for a om det er flere av b, og til høyre om det er færre. 
+        
+        høyest tall <-----> minst tall
+        
+        ? 0 
+        b a
+        
+        a: 4 | b: 3
+        -----------
+        4    |   3
+        -----------
+        
+        - sortByAmount(4, 3)
+        
+        - a er større enn b (a>b)
+        
+        - dermed skal den returnere -1
+        
+        - b skal derfor til høyre for a
+        
+        0  -1
+        a  b
+        */
+        
+		function sortByAmount(a, b) {
+		  if (a.amount < b.amount) {
+			return 1;
+		  }
+		  if (a.amount > b.amount) {
+			return -1;
+		  }
+		  return 0;
+		}	
+        
+        /*HTML VARIABLER*/
+        //text input
+        var productNameInput = document.getElementById("product-name");
+        var amountInput = document.getElementById("amount-in-storage");
+        
+        //buttons
+        var addArray = document.getElementById("add-to-array");
+        var showAdded = document.getElementById("show-added");
+        
+        //outputs
+        var outputDiv = document.getElementById("output-div")
+        
+        /*JS VARIABLER*/
+        // array for items in storage (some items already added to test buttons)
+        var itemArray = [{productName: "lutefisk", amount: 42}, {productName: "pinnekjøtt", amount: 12}, {productName: "ribbe", amount: 4}]
+        
+        /*ON CLICK*/
+        addArray.onclick =()=> addToArray(productNameInput.value, amountInput.value)
+        showAdded.onclick = showArray;
+        
+        
+        /*FUNCTIONS*/
+        
+        //add items to itemArray - updates the array when adding new items
+        function addToArray(product, num){
+            
+            //if all fields are filled out
+            if (product != "" && num != ""){
+                //create new object
+                var newItem = Object.create({});
+                newItem.productName = product;
+                newItem.amount = parseInt(num);
+            
+                //add object to array
+                itemArray.push(newItem)
+            
+                //update the output
+                showArray();
+            }
+            
+            else{
+                alert("du må fylle alle feltene")
+            }
+        }
+        
+        
+        //showing array, from most items to least
+        function showArray(){
+            
+            outputDiv.innerHTML = ""
+            sortedItemArray = itemArray.sort(sortByAmount)
+            
+            for (i=0; i<sortedItemArray.length; i++){
+                outputDiv.innerHTML += `<p>${sortedItemArray[i].productName}: ${sortedItemArray[i].amount}</p>`
+            }        
+        }
+	</script>
+</body>
+</html>
+
+

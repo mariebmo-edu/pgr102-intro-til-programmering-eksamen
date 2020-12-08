@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Navn på valgt oppgave = Tic Tac Toe</title>
+    
+    <style>
+        
+        
+        #board{
+            display: flex;
+            flex-flow: row wrap;
+            width: 600px;
+            height: 600px;
+        }
+        .square{
+            
+            background-color: beige;
+            flex-basis: 33%;
+            border: solid 3px grey;
+            font-size: 100px;
+        }
+        
+        .square:hover{
+            background-color: grey;
+        }
+    
+    </style>
+</head>
+<body>
+	
+    <div id="board">
+        <input type="button" class="square" id="btn0">
+        <input type="button" class="square" id="btn1">
+        <input type="button" class="square" id="btn2">
+        <input type="button" class="square" id="btn3">
+        <input type="button" class="square" id="btn4">
+        <input type="button" class="square" id="btn5">
+        <input type="button" class="square" id="btn6">
+        <input type="button" class="square" id="btn7">
+        <input type="button" class="square" id="btn8">
+        
+    
+    </div>
+    <input type="button" value="Empty Board" id="empty-btn">
+    
+    <script>
+    
+        /*HTML VARIABLES*/
+        var board = document.getElementById("board");
+        var squares = document.getElementsByClassName("square");
+        
+        var emptyBoardBtn = document.getElementById("empty-btn");
+        
+        /*JS VARIABLES*/
+        var gameOn = true;
+        var boardArr = [
+            {button: document.getElementById("btn0"), num: 0},
+            {button: document.getElementById("btn1"), num: 1},
+            {button: document.getElementById("btn2"), num: 2},
+            {button: document.getElementById("btn3"), num: 3},
+            {button: document.getElementById("btn4"), num: 4},
+            {button: document.getElementById("btn5"), num: 5},
+            {button: document.getElementById("btn6"), num: 6},
+            {button: document.getElementById("btn7"), num: 7},
+            {button: document.getElementById("btn8"), num: 8}
+        ]
+        var winningCombinations = [[0,1,2], [3,4,5], [6,7,8], [0,4,8], [2,4,6], [0,3,6], [1,4,7], [2,5,8]]
+        
+        /*ON CLICK*/
+        emptyBoardBtn.onclick = emptyBoard;
+        boardArr[0]["button"].onclick = addX;
+        boardArr[1]["button"].onclick = addX;
+        boardArr[2]["button"].onclick = addX;
+        boardArr[3]["button"].onclick = addX;
+        boardArr[4]["button"].onclick = addX;
+        boardArr[5]["button"].onclick = addX;
+        boardArr[6]["button"].onclick = addX;
+        boardArr[7]["button"].onclick = addX;
+        boardArr[8]["button"].onclick = addX;
+        
+        
+        /*FUNCTIONS*/
+        function emptyBoard(){
+            for (i=0; i<boardArr.length; i++){
+                boardArr[i]["button"].value="";
+            }
+        }
+        
+        
+        function addX(){
+            
+            if (this.value===""){
+            this.value="X"
+            playerTurn = false;
+            addO();
+            }
+            
+            else{
+                alert("Please pick a free square")
+            }
+            
+        }
+        
+        function addO(){
+            var freeSpaces = []
+            var random = Math.floor(Math.random * freeSpaces.length)
+            for(i=0; i<boardArr.length; i++){
+                if(boardArr[i]["button"].value === ""){
+                    freeSpaces.push(boardArr[i])
+                }
+            }
+            console.log(freeSpaces)
+            console.log(random)
+            freeSpaces[random].button.value = "O"
+            console.log(freeSpaces[random])
+        }
+        
+        /*GAME MECHANICS*/
+        
+        while (gameOn === true){
+            
+            gameOn = false;
+        }
+        
+        
+    </script>
+</body>
+</html>
