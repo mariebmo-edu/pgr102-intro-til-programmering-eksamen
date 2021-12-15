@@ -58,7 +58,10 @@
         
         // show all countries A-Z
         function showAll(){
+            //clears the output
             outputDiv.innerHTML = ""
+            
+            //prints all countries
             for(i = 0; i < countryArray.length; i++){
                 outputDiv.innerHTML += `${countryArray[i]["name"]}, `
             }
@@ -66,7 +69,10 @@
         
         // show all countries Z-A
         function showAllReverse(){
+            //clears the output
             outputDiv.innerHTML = ""
+            
+            //prints all countries - starting at the last country in the array and working its way forward.
             for(i = countryArray.length-1; i >= 0; i--){
                 outputDiv.innerHTML += `${countryArray[i]["name"]}, `
             }
@@ -74,8 +80,13 @@
         
         // show all countries where region === region input
         function countryByRegion(region){
+            //clears the output
             outputDiv.innerHTML = ""
+            
+            //counts countries
             var numOfCountries = 0;
+            
+            //prints the countries where the input-region matches the country region. If counted it adds 1 to the numOfCountries.
             for(i = 0; i < countryArray.length; i++){
                 if (countryArray[i]["region"].toLowerCase() === region.toLowerCase()){
                     outputDiv.innerHTML += `${countryArray[i]["name"]}, `
@@ -90,7 +101,10 @@
         
         //Shows name, capital and region for the input-country.
         function showInfo(country){
+            //clears the output
             outputDiv.innerHTML = ""
+            
+            //prints the info for the country where the name matches the input
             for(i = 0; i < countryArray.length; i++){
                 if (countryArray[i]["name"].toLowerCase() === country.toLowerCase()){
                     outputDiv.innerHTML += `${countryArray[i]["name"]} <br> Capital: ${countryArray[i]["capital"]} <br> Region: ${countryArray[i]["region"]}  `
@@ -103,7 +117,10 @@
         
         //Gives 10 random countries
         function randomCountries(){
+            //clears the output
             outputDiv.innerHTML = ""
+            
+            //prints a country per i (10), where the country is randomly selected.
             for (i = 0; i<10; i++){
                 var random = Math.floor(Math.random()*countryArray.length);
                 outputDiv.innerHTML += `${countryArray[random]["name"]}, `

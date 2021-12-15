@@ -8,17 +8,23 @@
         
         
         #board{
+            background-color: #323232;
             display: flex;
             flex-flow: row wrap;
             width: 600px;
             height: 600px;
+            border-radius: 20px;
+            padding: 20px;
+            
         }
         .square{
             
-            background-color: beige;
+            background-color: #404040;
             flex-basis: 33%;
-            border: solid 3px grey;
+            border: solid 3px #323232;
             font-size: 100px;
+            border-radius: 10%;
+            color: white;
         }
         
         .square:hover{
@@ -29,6 +35,7 @@
 </head>
 <body>
 	
+    <!-- TIC TAC TOE BOARD -->
     <div id="board">
         <input type="button" class="square" id="btn0">
         <input type="button" class="square" id="btn1">
@@ -42,14 +49,14 @@
         
     
     </div>
+    
+    <!-- RESET BOARD BUTTON -->
     <input type="button" value="Empty Board" id="empty-btn">
     
     <script>
     
         /*HTML VARIABLES*/
         var board = document.getElementById("board");
-        var squares = document.getElementsByClassName("square");
-        
         var emptyBoardBtn = document.getElementById("empty-btn");
         
         /*JS VARIABLES*/
@@ -65,10 +72,14 @@
             {button: document.getElementById("btn7"), num: 7},
             {button: document.getElementById("btn8"), num: 8}
         ]
+        
+        //winning combinations on the board
         var winningCombinations = [[0,1,2], [3,4,5], [6,7,8], [0,4,8], [2,4,6], [0,3,6], [1,4,7], [2,5,8]]
         
         /*ON CLICK*/
         emptyBoardBtn.onclick = emptyBoard;
+        
+        //Board buttons
         boardArr[0]["button"].onclick = addX;
         boardArr[1]["button"].onclick = addX;
         boardArr[2]["button"].onclick = addX;
@@ -81,49 +92,237 @@
         
         
         /*FUNCTIONS*/
+        
+        //Resets game, resets the winning combinations and button values
         function emptyBoard(){
             for (i=0; i<boardArr.length; i++){
                 boardArr[i]["button"].value="";
             }
+            
+            winningCombinations = [[0,1,2], [3,4,5], [6,7,8], [0,4,8], [2,4,6], [0,3,6], [1,4,7], [2,5,8]]
+        }
+        
+        // adds (updates) "X" and "O" to the winningCombinations array (if you place "X" on spot 3, all 3's will become "X"'es)
+        function updateCombinations(){
+            // each trio-combination
+            for(i=0; i<winningCombinations.length; i++){
+                //each board number in the trio
+                for(j=0; j<3; j++){
+                    // each button on the board 
+                    for(k=0; k<boardArr.length; k++){
+                        //if the value of the button isn't empty..
+                        if (boardArr[k].button.value != ""){
+                            //if the number of the boardarr object is the same as the number in the number in a trio
+                            if (boardArr[k].num === winningCombinations[i][j]){
+                                //add the value of the button ("X" or "O") to the number
+                                winningCombinations[i][j] = boardArr[k].button.value;
+                            }
+                        }
+                        //if the value of the button is empty, just continue
+                        else{
+                            continue;
+                        }
+                    } 
+                } 
+            }
+        }
+        
+        //checks if a player has won by seeing if any of combination-arrays only consists of "X" og "O"
+        function checkForWin(icon){
+            
+            //adds variable like the input icon  (ex ["X", "X", "X"])
+            var winCondition = [icon, icon, icon];
+            
+            //forloop checking if any of the combinations in the winningCombinations is equal to the winCondition (`XXX` === `XXX`), converted to string as arrays are a bit difficult to compare.
+            for (i=0; i<winningCombinations.length; i++){
+                
+                //If anybody wins, alert that the player wins and run "replay" function
+                if(winningCombinations[i].join("") === winCondition.join("")){
+                    alert(`${icon} WINS!`)
+                    replay();
+                }
+                
+                //if nobody has won, continue
+                else{
+                    continue
+                }
+            } 
+        }
+        
+        //checks if it's a tie, and asks if you want to replay if it is.
+        function checkForTie(){
+        
+            //amount of empty boxes on the board
+            var freeBoxes = 9;
+            
+            //for each button that's not empty, subtract one from freeBoxes
+            for(i=0; i<boardArr.length; i++){
+                if(boardArr[i].button.value != ""){
+                    freeBoxes--
+                    
+                    //when the freeBoxes var = 0, and there's no winner, it's a tie. runs the replay-function
+                    if(freeBoxes === 0){
+                        alert("IT'S A TIE!")
+                        replay();
+                    }
+                }
+            }
+        }
+        
+        //trying to predict the next move based on current board input 
+        function predict(){
+            
+            //list of combinations currently containing two X's or O's
+            var listOfO = []
+            var listOfX = []
+            
+            //for each item in array
+            for (i=0; i<winningCombinations.length; i++){
+                
+                //count amount of Os and Xs in a winCondition ["X", "X", 2] would be numX=2
+                var numO = 0;
+                var numX = 0;
+                
+                //for each spot in item
+                for (j=0; j<3; j++){
+                    
+                    //if the spot contains "O" 
+                    if (winningCombinations[i][j] === "O"){
+                        
+                        //add 1 to numO
+                        numO++
+                        
+                        //if numO is 2, and there's no X's
+                        if (numO === 2 && numX === 0){
+                            //add the combination to list
+                            listOfO.push(winningCombinations[i])
+                            console.log("ADDED O")
+                        }
+                        
+                    }
+                    
+                    //if the spot contains "X"
+                    else if (winningCombinations[i][j] === "X"){
+                        
+                        //add 1 to "X"
+                        numX++
+                        
+                        //if numX is 2, and there's no O's
+                        if (numX === 2 && numO === 0){
+                            //add combination to list
+                            listOfX.push(winningCombinations[i])
+                            console.log("ADDED X")
+                            
+                        }
+                    }
+                }     
+            }
+            
+            //if the AI can win, it'll use this oppertunity above anything. It returns the free spot in the trio
+            if(listOfO.length > 0){
+                return returnNumber(listOfO[listOfO.length-1])
+            }
+            
+            //if the AI can't win, it'll use this oppertunity to block the players move if possible. returns the free spot in the player trio
+            else if(listOfX.length > 0){
+                return returnNumber(listOfX[listOfX.length-1])
+            } 
         }
         
         
+        //Returns the numbers from an array - in this code the input is consisting of two strings and one number.
+        function returnNumber(arr){
+            for (i=0; i<arr.length; i++){
+                if(isNaN(arr[i])){
+                    continue
+                }
+                else{
+                    return arr[i]
+                }
+            }
+        }
+        
+        
+        //randomizer function, takes in array parameter
+        function random(arr){
+            return Math.floor(Math.random()*arr.length)
+        }
+        
+        
+        //adds "X" to the clicked button if the spot is open - then lets "O" select when it's done
         function addX(){
             
+            //if the button you're clicking doesn't have a value
             if (this.value===""){
-            this.value="X"
-            playerTurn = false;
-            addO();
+                //Add "X" as value, then update the combinations, check if you've won, check if it's a tie, then let player "O" have it's turn.
+                this.value="X";
+                updateCombinations();
+                checkForWin("X");
+                checkForTie();
+
+                addO();
             }
             
             else{
+                // if it's not empty, you'll get an error.
                 alert("Please pick a free square")
-            }
-            
+            } 
         }
         
+        
+        //adds "O" to an random open spot (it's a quite stupid AI). Adds any ""-values to a new variable, then picks one at random. 
         function addO(){
+                
+            //array of objects on the board that's not used yet.
             var freeSpaces = []
-            var random = Math.floor(Math.random * freeSpaces.length)
+
+            // adds the buttons that's not used to a new array
             for(i=0; i<boardArr.length; i++){
                 if(boardArr[i]["button"].value === ""){
                     freeSpaces.push(boardArr[i])
                 }
             }
-            console.log(freeSpaces)
-            console.log(random)
-            freeSpaces[random].button.value = "O"
-            console.log(freeSpaces[random])
-        }
-        
-        /*GAME MECHANICS*/
-        
-        while (gameOn === true){
             
-            gameOn = false;
+            // if it's possible, try to use the predictions (get 3 "O"s or block "X") predict() returns the empty spot - first for Os then Xs if there's no Os. Then it updates and checks for wins and ties
+            try{
+                boardArr[predict()].button.value = "O"
+                updateCombinations();
+                checkForWin("O");
+                checkForTie();
+            }
+            
+            // if you don't get a return on predict(),like the first turn, it'll select a random square from the empty spots on the board. then updates and checks for wins and ties. 
+            catch(err){
+                freeSpaces[random(freeSpaces)].button.value = "O"
+                updateCombinations();
+                checkForWin("O");
+                checkForTie();
+            }
         }
         
         
+        //asks you if you want to replay when you've finished the game. "y"/"yes" will reset the board and let you start over, "n"/"no" will leave the board as is.
+        function replay(){
+            
+            //as long as you're asking if you want to play again ...
+            var asking = true;
+            while (asking === true){
+                // you'll get prompted for a new game
+                var newGame = prompt("Play again? y/n")
+                
+                //if you select y/yes, you'll get an empty board and set the replay asking to false.
+                if(newGame.toLowerCase() === "y" || newGame.toLowerCase() === yes){
+                    emptyBoard();
+                    asking = false;
+                }
+                
+                //if you select n/no, you'll get the finished board, and set the replay asking to false.
+                else if(newGame.toLowerCase() === "n" || newGame.toLowerCase() === "no"){
+                    break;
+                    asking = false;
+                }
+            }  
+        }
     </script>
 </body>
 </html>

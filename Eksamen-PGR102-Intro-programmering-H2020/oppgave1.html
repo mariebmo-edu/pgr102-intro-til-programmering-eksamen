@@ -74,19 +74,41 @@
         
         //adding to glass
         function pour(amount){
-            juiceAmount += parseInt(amount);
-            updateGlass()
+            
+            //if the input is not empty, add the amount to the glass and run the updateglass function
+            if(amount != ""){
+                juiceAmount += parseInt(amount);
+                updateGlass()
+            }
+            
+            //if the input is empty, ask the user to write an input.
+            else{
+                statusP.innerHTML="Du må skrive inn et tall"
+            }
+            
         }
         
         //subtracting from glass
         function drink(amount){
-            juiceAmount -= parseInt(amount)
-            updateGlass()
+            
+            //if the input is not empty, add the amount to the glass and run the updateglass function
+            if(amount != ""){
+                juiceAmount -= parseInt(amount);
+                updateGlass()
+            }
+            
+            //if the input is empty, ask the user to write an input.
+            else{
+                statusP.innerHTML="Du må skrive inn et tall"
+            }
         }
         
         // updates the glass graphic and text
         function updateGlass(){
+            //cheks if the juice is within limits, and sets new value if not.
             glassCheck();
+            
+            //updates the height of the juice, and the text saying how much it is
             juiceAmountGraphic.style.height = `${juiceAmount}px`
             juiceAmountTxt.innerHTML = `${juiceAmount}`
         }
